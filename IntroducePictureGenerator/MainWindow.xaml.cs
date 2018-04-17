@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
 using ColorFont;
 using Microsoft.Win32;
 using Xceed.Wpf.Toolkit;
@@ -30,15 +32,9 @@ namespace IntroducePictureGenerator
 
         public List<Xceed.Wpf.Toolkit.ColorPicker> SpotIndexColorList;
 
-        public FontInfo TitleFontInfo;
-
-        public FontInfo TitleDetailFontInfo;
-
-        public FontInfo SpotFontInfo;
-
-        public FontInfo SpotDetailFontInfo;
-
         PreviewWindow _previewWindow;
+
+        public SettingInfo SettingInfo { get; set; }
 
         public MainWindow()
         {
@@ -46,11 +42,18 @@ namespace IntroducePictureGenerator
             SpotList = new List<TextBox>();
             SpotDetailList = new List<TextBox>();
             SpotIndexColorList = new List<Xceed.Wpf.Toolkit.ColorPicker>();
-            TitleFontInfo = FontInfo.GetControlFont(this.TextBox_Title);
-            TitleDetailFontInfo = FontInfo.GetControlFont(this.TextBox_Title);
-            SpotFontInfo = FontInfo.GetControlFont(this.TextBox_Title);
-            SpotDetailFontInfo = FontInfo.GetControlFont(this.TextBox_Title);
+            SettingInfo = new SettingInfo();
+            SettingInfo.TitleFontInfo = FontInfo.GetControlFont(this.TextBox_Title);
+            SettingInfo.TitleDetailFontInfo = FontInfo.GetControlFont(this.TextBox_Title);
+            SettingInfo.SpotFontInfo = FontInfo.GetControlFont(this.TextBox_Title);
+            SettingInfo.SpotDetailFontInfo = FontInfo.GetControlFont(this.TextBox_Title);
+            SettingInfo.TitleSize = 25d;
+            SettingInfo.TitleDetailSize = 20d;
+            SettingInfo.SpotSize = 15d;
+            SettingInfo.SpotDetailSize = 12d;
+            SettingInfo.ImageAreaRatio = 0.618d;
             Button_Generate.IsEnabled = false;
+            this.DataContext = SettingInfo;
         }
 
         private void AddSpot()
@@ -84,6 +87,9 @@ namespace IntroducePictureGenerator
             colorPicker.HorizontalAlignment = HorizontalAlignment.Right;
             colorPicker.SetValue(Grid.RowProperty, 0);
             colorPicker.SetValue(Grid.ColumnProperty, 1);
+            //colorPicker.SelectedColor = Colors.White;
+            Binding binding = new Binding($"SpotColorList[{SpotList.Count}]");
+            colorPicker.SetBinding(Xceed.Wpf.Toolkit.ColorPicker.SelectedColorProperty, binding);
             grid.Children.Add(textBlock);
             grid.Children.Add(textBox);
             grid.Children.Add(textBlockColor);
@@ -133,6 +139,11 @@ namespace IntroducePictureGenerator
 
         private void addDetailButton_Click(object sender, RoutedEventArgs e)
         {
+            if (SpotList.Count == 6)
+            {
+                System.Windows.MessageBox.Show("我觉得特点太多了，要不您再考虑下？目前只支持最多6个特点", "请考虑", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
             AddSpot();
         }
 
@@ -148,7 +159,7 @@ namespace IntroducePictureGenerator
             fntDialog.Font = FontInfo.GetControlFont(this.TextBox_Title);
             if (fntDialog.ShowDialog() == true)
             {
-                TitleFontInfo = fntDialog.Font;
+                SettingInfo.TitleFontInfo = fntDialog.Font;
             }
         }
 
@@ -159,7 +170,7 @@ namespace IntroducePictureGenerator
             fntDialog.Font = FontInfo.GetControlFont(this.TextBox_TitleDetail);
             if (fntDialog.ShowDialog() == true)
             {
-                TitleDetailFontInfo = fntDialog.Font;
+                SettingInfo.TitleDetailFontInfo = fntDialog.Font;
             }
         }
 
@@ -170,7 +181,7 @@ namespace IntroducePictureGenerator
             fntDialog.Font = FontInfo.GetControlFont(this.SpotList[0]);
             if (fntDialog.ShowDialog() == true)
             {
-                SpotFontInfo = fntDialog.Font;
+                SettingInfo.SpotFontInfo = fntDialog.Font;
             }
         }
 
@@ -181,7 +192,7 @@ namespace IntroducePictureGenerator
             fntDialog.Font = FontInfo.GetControlFont(this.SpotDetailList[0]);
             if (fntDialog.ShowDialog() == true)
             {
-                SpotDetailFontInfo = fntDialog.Font;
+                SettingInfo.SpotDetailFontInfo = fntDialog.Font;
             }
         }
 
@@ -261,6 +272,110 @@ namespace IntroducePictureGenerator
             {
                 return string.Empty;
             }
+        }
+    }
+
+    public class SettingInfo : INotifyPropertyChanged
+    {
+        public FontInfo TitleFontInfo;
+
+        public FontInfo TitleDetailFontInfo;
+
+        public FontInfo SpotFontInfo;
+
+        public FontInfo SpotDetailFontInfo;
+
+        private double _titleSize;
+
+        public double TitleSize
+        {
+            get { return _titleSize; }
+            set
+            {
+                _titleSize = value;
+                OnPropertyChanged("TitleSize");
+            }
+        }
+
+        private double _titleDetailSize;
+
+        public double TitleDetailSize
+        {
+            get { return _titleDetailSize; }
+            set
+            {
+                _titleDetailSize = value;
+                OnPropertyChanged("TitleDetailSize");
+            }
+        }
+
+        private double _spotSize;
+
+        public double SpotSize
+        {
+            get { return _spotSize; }
+            set
+            {
+                _spotSize = value;
+                OnPropertyChanged("SpotSize");
+            }
+        }
+
+        private double _spotDetailSize;
+
+        public double SpotDetailSize
+        {
+            get { return _spotDetailSize; }
+            set
+            {
+                _spotDetailSize = value;
+                OnPropertyChanged("SpotDetailSize");
+            }
+        }
+
+        private double _ImageAreaRatio;
+
+        public double ImageAreaRatio
+        {
+            get { return _ImageAreaRatio; }
+            set
+            {
+                _ImageAreaRatio = value;
+                OnPropertyChanged("ImageAreaRatio");
+            }
+        }
+
+        private ObservableCollection<Color> _spotColorList;
+
+        public ObservableCollection<Color> SpotColorList
+        {
+            get { return _spotColorList; }
+            set
+            {
+                _spotColorList = value;
+                OnPropertyChanged("SpotColorList");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public SettingInfo()
+        {
+            SpotColorList = new ObservableCollection<Color>();
+            SpotColorList.Add(Colors.White);
+            SpotColorList.Add(Colors.White);
+            SpotColorList.Add(Colors.White);
+            SpotColorList.Add(Colors.White);
+            SpotColorList.Add(Colors.White);
+            SpotColorList.Add(Colors.White);
         }
     }
 }

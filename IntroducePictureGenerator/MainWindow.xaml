@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:IntroducePictureGenerator"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="图片介绍生成器" Height="800" Width="600" Topmost="True" Icon="/Resources/girls.ico">
+        Title="图片介绍生成器" Height="800" Width="600" MinHeight="800" MinWidth="500" Topmost="True" Icon="/Resources/girls.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -83,17 +83,19 @@
         </StackPanel>
         <Button x:Name="Button_TitleFont" Content="标题字体" Grid.Column="1" HorizontalAlignment="Left" Margin="62,14,0,0" VerticalAlignment="Top" Width="75" Click="Button_TitleFont_Click"/>
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="48,44,0,0" TextWrapping="Wrap" Text="标题字号" VerticalAlignment="Top"/>
-        <TextBox x:Name="TextBox_TitleFontSize" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="112,42,0,0" Text="12" VerticalAlignment="Top" Width="31"/>
+        <TextBox x:Name="TextBox_TitleFontSize" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="112,42,0,0" Text="{Binding Path=TitleSize}" VerticalAlignment="Top" Width="31"/>
         <Button x:Name="Button_TitleDetailFont" Content="标题详细字体" Grid.Column="1" HorizontalAlignment="Left" Margin="62,82,0,0" VerticalAlignment="Top" Width="75" Click="Button_TitleDetailFont_Click"/>
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="31,112,0,0" TextWrapping="Wrap" Text="标题详细字号" VerticalAlignment="Top"/>
-        <TextBox x:Name="TextBox_TitleDetailFontSize" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="112,110,0,0" Text="12" VerticalAlignment="Top" Width="31"/>
+        <TextBox x:Name="TextBox_TitleDetailFontSize" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="112,110,0,0" Text="{Binding Path=TitleDetailSize}" VerticalAlignment="Top" Width="31"/>
         <Button x:Name="Button_SpotFont" Content="描述字体" Grid.Column="1" HorizontalAlignment="Left" Margin="62,154,0,0" VerticalAlignment="Top" Width="75" Click="Button_SpotFont_Click"/>
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="31,184,0,0" TextWrapping="Wrap" Text="描述字号" VerticalAlignment="Top"/>
-        <TextBox x:Name="TextBox_SpotFontSize" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="112,182,0,0" Text="12" VerticalAlignment="Top" Width="31"/>
+        <TextBox x:Name="TextBox_SpotFontSize" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="112,182,0,0" Text="{Binding Path=SpotSize}" VerticalAlignment="Top" Width="31"/>
         <Button x:Name="Button_SpotDetailFont" Content="描述详细字体" Grid.Column="1" HorizontalAlignment="Left" Margin="62,224,0,0" VerticalAlignment="Top" Width="75" Click="Button_SpotDetailFont_Click"/>
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="31,254,0,0" TextWrapping="Wrap" Text="描述详细字号" VerticalAlignment="Top"/>
-        <TextBox x:Name="TextBox_SpotDetailFontSize" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="112,252,0,0" Text="12" VerticalAlignment="Top" Width="31"/>
-        <Button x:Name="Button_Preview" Content="预览" Grid.Column="1" HorizontalAlignment="Left" Margin="31,730,0,0" VerticalAlignment="Top" Width="60" Click="Button_Preview_Click"/>
-        <Button x:Name="Button_Generate" Content="生成图片" Grid.Column="1" HorizontalAlignment="Left" Margin="111,730,0,0" VerticalAlignment="Top" Width="60" Click="Button_Generate_Click"/>
+        <TextBox x:Name="TextBox_SpotDetailFontSize" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="112,252,0,0" Text="{Binding Path=SpotDetailSize}" VerticalAlignment="Top" Width="31"/>
+        <Button x:Name="Button_Preview" Content="预览" Grid.Column="1" HorizontalAlignment="Left" Margin="41,0,0,16" VerticalAlignment="Bottom" Width="60" Click="Button_Preview_Click"/>
+        <Button x:Name="Button_Generate" Content="生成图片" Grid.Column="1" HorizontalAlignment="Left" Margin="121,0,0,16" VerticalAlignment="Bottom" Width="60" Click="Button_Generate_Click"/>
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="31,312,0,0" TextWrapping="Wrap" Text="图片区域占比" VerticalAlignment="Top"/>
+        <TextBox x:Name="TextBox_ImageAreaRatio" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="112,312,0,0" Text="{Binding Path=ImageAreaRatio}" VerticalAlignment="Top" Width="59"/>
     </Grid>
 </Window>

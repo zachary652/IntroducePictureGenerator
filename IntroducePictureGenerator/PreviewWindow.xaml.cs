@@ -20,8 +20,6 @@ namespace IntroducePictureGenerator
     /// </summary>
     public partial class PreviewWindow : Window
     {
-        private const double GOLDEN_SECTION = 0.618d;
-
         private MainWindow _mainWindow;
 
         private double _width;
@@ -39,7 +37,7 @@ namespace IntroducePictureGenerator
             _width = dragCanvas.ActualWidth;
             _height = dragCanvas.ActualHeight;
             dragCanvas.Children.Clear();
-            double imageAreaWitdth = _width * GOLDEN_SECTION;
+            double imageAreaWitdth = _width * _mainWindow.SettingInfo.ImageAreaRatio;
             if (File.Exists(_mainWindow.TextBox_ImgPath1.Text))
             {
                 Image image = new Image();
@@ -105,13 +103,13 @@ namespace IntroducePictureGenerator
                 image.Source = new BitmapImage(new Uri(_mainWindow.TextBox_ImgPath5.Text, UriKind.Absolute));
                 dragCanvas.Children.Add(image);
             }
-            double textAreaWidthOffset = _width * GOLDEN_SECTION;
+            double textAreaWidthOffset = _width * _mainWindow.SettingInfo.ImageAreaRatio;
             double textAreaHeightOffset = 100d;
             TextBlock textBlockTitle = new TextBlock();
             textBlockTitle.Text = _mainWindow.TextBox_Title.Text;
-            textBlockTitle.FontFamily = _mainWindow.TitleFontInfo.Family;
-            textBlockTitle.FontSize = _mainWindow.TitleFontInfo.Size;
-            textBlockTitle.FontWeight = _mainWindow.TitleFontInfo.Weight;
+            textBlockTitle.FontFamily = _mainWindow.SettingInfo.TitleFontInfo.Family;
+            textBlockTitle.FontSize = _mainWindow.SettingInfo.TitleSize;
+            textBlockTitle.FontWeight = _mainWindow.SettingInfo.TitleFontInfo.Weight;
             textBlockTitle.SetValue(Canvas.LeftProperty, 50d + textAreaWidthOffset);
             textBlockTitle.SetValue(Canvas.TopProperty, textAreaHeightOffset);
             dragCanvas.Children.Add(textBlockTitle);
@@ -120,9 +118,9 @@ namespace IntroducePictureGenerator
 
             TextBlock textBlockTitleDetail = new TextBlock();
             textBlockTitleDetail.Text = _mainWindow.TextBox_TitleDetail.Text;
-            textBlockTitleDetail.FontFamily = _mainWindow.TitleDetailFontInfo.Family;
-            textBlockTitleDetail.FontSize = _mainWindow.TitleDetailFontInfo.Size;
-            textBlockTitleDetail.FontWeight = _mainWindow.TitleDetailFontInfo.Weight;
+            textBlockTitleDetail.FontFamily = _mainWindow.SettingInfo.TitleDetailFontInfo.Family;
+            textBlockTitleDetail.FontSize = _mainWindow.SettingInfo.TitleDetailSize;
+            textBlockTitleDetail.FontWeight = _mainWindow.SettingInfo.TitleDetailFontInfo.Weight;
             textBlockTitleDetail.SetValue(Canvas.LeftProperty, 50d + textAreaWidthOffset);
             textBlockTitleDetail.SetValue(Canvas.TopProperty, textAreaHeightOffset);
             dragCanvas.Children.Add(textBlockTitleDetail);
@@ -133,33 +131,35 @@ namespace IntroducePictureGenerator
             {
                 TextBlock textIndex = new TextBlock();
                 textIndex.Text = (i + 1).ToString();
-                textIndex.FontFamily = _mainWindow.SpotFontInfo.Family;
-                textIndex.FontSize = _mainWindow.SpotFontInfo.Size;
-                textIndex.FontWeight = _mainWindow.SpotFontInfo.Weight;
-                textIndex.Foreground = Brushes.White;
+                textIndex.FontFamily = _mainWindow.SettingInfo.SpotFontInfo.Family;
+                textIndex.FontSize = _mainWindow.SettingInfo.SpotSize;
+                textIndex.FontWeight = _mainWindow.SettingInfo.SpotFontInfo.Weight;
+                textIndex.Foreground = new SolidColorBrush(ContrastColor(_mainWindow.SettingInfo.SpotColorList[i]));
                 textIndex.SetValue(Canvas.LeftProperty, 40d + textAreaWidthOffset);
                 textIndex.SetValue(Canvas.TopProperty, textAreaHeightOffset);
                 textIndex.SetValue(Canvas.ZIndexProperty, 1);
                 dragCanvas.Children.Add(textIndex);
                 this.UpdateLayout();
 
-                Ellipse ellipse = new Ellipse();
-                if (_mainWindow.SpotIndexColorList[i].SelectedColor != null)
-                {
-                    ellipse.Fill = new SolidColorBrush((Color)_mainWindow.SpotIndexColorList[i].SelectedColor);
-                }
-                ellipse.Width = textIndex.ActualHeight * 2;
-                ellipse.Height = textIndex.ActualHeight * 2;
-                ellipse.SetValue(Canvas.LeftProperty, 40d + textAreaWidthOffset - (ellipse.Width - textIndex.ActualWidth) / 2);
-                ellipse.SetValue(Canvas.TopProperty, textAreaHeightOffset - (ellipse.Height - textIndex.ActualHeight) / 2);
-                dragCanvas.Children.Insert(dragCanvas.Children.IndexOf(textIndex), ellipse);
+                Border border = new Border();
+                border.Background = new SolidColorBrush(_mainWindow.SettingInfo.SpotColorList[i]);
+                border.Width = textIndex.ActualHeight * 2;
+                border.Height = textIndex.ActualHeight * 2;
+                border.CornerRadius = new CornerRadius(50);
+                border.SetValue(Canvas.LeftProperty, 40d + textAreaWidthOffset - (border.Width - textIndex.ActualWidth) / 2);
+                border.SetValue(Canvas.TopProperty, textAreaHeightOffset - (border.Height - textIndex.ActualHeight) / 2);
+                dragCanvas.Children.Remove(textIndex);
+                border.Child = textIndex;
+                textIndex.HorizontalAlignment = HorizontalAlignment.Center;
+                textIndex.VerticalAlignment = VerticalAlignment.Center;
+                dragCanvas.Children.Add(border);
                 this.UpdateLayout();
 
                 TextBlock textSpot = new TextBlock();
                 textSpot.Text = _mainWindow.SpotList[i].Text;
-                textSpot.FontFamily = _mainWindow.SpotFontInfo.Family;
-                textSpot.FontSize = _mainWindow.SpotFontInfo.Size;
-                textSpot.FontWeight = _mainWindow.SpotFontInfo.Weight;
+                textSpot.FontFamily = _mainWindow.SettingInfo.SpotFontInfo.Family;
+                textSpot.FontSize = _mainWindow.SettingInfo.SpotSize;
+                textSpot.FontWeight = _mainWindow.SettingInfo.SpotFontInfo.Weight;
                 textSpot.SetValue(Canvas.LeftProperty, 40d + textAreaWidthOffset + textIndex.ActualWidth + 30);
                 textSpot.SetValue(Canvas.TopProperty, textAreaHeightOffset);
                 dragCanvas.Children.Add(textSpot);
@@ -169,9 +169,9 @@ namespace IntroducePictureGenerator
 
                 TextBlock textSpotDetail = new TextBlock();
                 textSpotDetail.Text = _mainWindow.SpotDetailList[i].Text;
-                textSpotDetail.FontFamily = _mainWindow.SpotDetailFontInfo.Family;
-                textSpotDetail.FontSize = _mainWindow.SpotDetailFontInfo.Size;
-                textSpotDetail.FontWeight = _mainWindow.SpotDetailFontInfo.Weight;
+                textSpotDetail.FontFamily = _mainWindow.SettingInfo.SpotDetailFontInfo.Family;
+                textSpotDetail.FontSize = _mainWindow.SettingInfo.SpotDetailSize;
+                textSpotDetail.FontWeight = _mainWindow.SettingInfo.SpotDetailFontInfo.Weight;
                 textSpotDetail.SetValue(Canvas.LeftProperty, 40d + textAreaWidthOffset + textIndex.ActualWidth + 30);
                 textSpotDetail.SetValue(Canvas.TopProperty, textAreaHeightOffset);
                 dragCanvas.Children.Add(textSpotDetail);
@@ -186,6 +186,17 @@ namespace IntroducePictureGenerator
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             GeneratePreview();
+        }
+
+        private Color ContrastColor(Color color)
+        {
+            byte d = 0;
+            double a = 1 - (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255;
+            if (a < 0.5)
+                d = 0;
+            else
+                d = 255;
+            return Color.FromArgb(255, d, d, d);
         }
     }
 }

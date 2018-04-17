@@ -97,5 +97,6 @@
         <Button x:Name="Button_Generate" Content="生成图片" Grid.Column="1" HorizontalAlignment="Left" Margin="121,0,0,16" VerticalAlignment="Bottom" Width="60" Click="Button_Generate_Click"/>
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="31,312,0,0" TextWrapping="Wrap" Text="图片区域占比" VerticalAlignment="Top"/>
         <TextBox x:Name="TextBox_ImageAreaRatio" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="112,312,0,0" Text="{Binding Path=ImageAreaRatio}" VerticalAlignment="Top" Width="59"/>
+        <Button x:Name="Button_SaveSetting" Content="保存当前设置与布局" Grid.Column="1" HorizontalAlignment="Left" Margin="41,361,0,0" VerticalAlignment="Top" Width="120" Click="Button_SaveSetting_Click"/>
     </Grid>
 </Window>

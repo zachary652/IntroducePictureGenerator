@@ -273,6 +273,11 @@ namespace IntroducePictureGenerator
                 return string.Empty;
             }
         }
+
+        private void Button_SaveSetting_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
     public class SettingInfo : INotifyPropertyChanged
@@ -357,6 +362,126 @@ namespace IntroducePictureGenerator
             }
         }
 
+        private ObservableCollection<double> _titleLeftList;
+
+        public ObservableCollection<double> TitleLeftList
+        {
+            get { return _titleLeftList; }
+            set
+            {
+                _titleLeftList = value;
+                OnPropertyChanged("TitleLeftList");
+            }
+        }
+
+        private ObservableCollection<double> _titleDetailLeftList;
+
+        public ObservableCollection<double> TitleDetailLeftList
+        {
+            get { return _titleDetailLeftList; }
+            set
+            {
+                _titleDetailLeftList = value;
+                OnPropertyChanged("TitleDetailLeftList");
+            }
+        }
+
+        private ObservableCollection<double> _spotLeftList;
+
+        public ObservableCollection<double> SpotLeftList
+        {
+            get { return _spotLeftList; }
+            set
+            {
+                _spotLeftList = value;
+                OnPropertyChanged("SpotLeftList");
+            }
+        }
+
+        private ObservableCollection<double> _spotDetailLeftList;
+
+        public ObservableCollection<double> SpotDetailLeftList
+        {
+            get { return _spotDetailLeftList; }
+            set
+            {
+                _spotDetailLeftList = value;
+                OnPropertyChanged("SpotDetailLeftList");
+            }
+        }
+
+        private ObservableCollection<double> _spotIndexLeftList;
+
+        public ObservableCollection<double> SpotIndexLeftList
+        {
+            get { return _spotIndexLeftList; }
+            set
+            {
+                _spotIndexLeftList = value;
+                OnPropertyChanged("SpotIndexLeftList");
+            }
+        }
+
+        private ObservableCollection<double> _titleTopList;
+
+        public ObservableCollection<double> TitleTopList
+        {
+            get { return _titleTopList; }
+            set
+            {
+                _titleTopList = value;
+                OnPropertyChanged("TitleTopList");
+            }
+        }
+
+        private ObservableCollection<double> _titleDetailTopList;
+
+        public ObservableCollection<double> TitleDetailTopList
+        {
+            get { return _titleDetailTopList; }
+            set
+            {
+                _titleDetailTopList = value;
+                OnPropertyChanged("TitleDetailTopList");
+            }
+        }
+
+        private ObservableCollection<double> _spotTopList;
+
+        public ObservableCollection<double> SpotTopList
+        {
+            get { return _spotTopList; }
+            set
+            {
+                _spotTopList = value;
+                OnPropertyChanged("SpotTopList");
+            }
+        }
+
+        private ObservableCollection<double> _spotDetailTopList;
+
+        public ObservableCollection<double> SpotDetailTopList
+        {
+            get { return _spotDetailTopList; }
+            set
+            {
+                _spotDetailTopList = value;
+                OnPropertyChanged("SpotDetailTopList");
+            }
+        }
+
+        private ObservableCollection<double> _spotIndexTopList;
+
+        public ObservableCollection<double> SpotIndexTopList
+        {
+            get { return _spotIndexTopList; }
+            set
+            {
+                _spotIndexTopList = value;
+                OnPropertyChanged("SpotIndexTopList");
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
@@ -376,6 +501,29 @@ namespace IntroducePictureGenerator
             SpotColorList.Add(Colors.White);
             SpotColorList.Add(Colors.White);
             SpotColorList.Add(Colors.White);
+            TitleLeftList = new ObservableCollection<double>();
+            TitleTopList = new ObservableCollection<double>();
+            TitleDetailLeftList = new ObservableCollection<double>();
+            TitleDetailTopList = new ObservableCollection<double>();
+            SpotLeftList = new ObservableCollection<double>();
+            SpotTopList = new ObservableCollection<double>();
+            SpotDetailLeftList = new ObservableCollection<double>();
+            SpotDetailTopList = new ObservableCollection<double>();
+            SpotIndexLeftList = new ObservableCollection<double>();
+            SpotIndexTopList = new ObservableCollection<double>();
+            for (int i = 0; i < 6; i++)
+            {
+                TitleLeftList.Add(0d);
+                TitleTopList.Add(0d);
+                TitleDetailLeftList.Add(0d);
+                TitleDetailTopList.Add(0d);
+                SpotLeftList.Add(0d);
+                SpotTopList.Add(0d);
+                SpotDetailLeftList.Add(0d);
+                SpotDetailTopList.Add(0d);
+                SpotIndexLeftList.Add(0d);
+                SpotIndexTopList.Add(0d);
+            }
         }
     }
 }

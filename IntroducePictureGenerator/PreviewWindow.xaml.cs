@@ -30,6 +30,7 @@ namespace IntroducePictureGenerator
         {
             InitializeComponent();
             _mainWindow = mainWindow;
+            this.DataContext = _mainWindow;
         }
 
         public void GeneratePreview()
@@ -139,10 +140,8 @@ namespace IntroducePictureGenerator
                 textIndex.FontSize = _mainWindow.SettingInfo.SpotSize;
                 textIndex.FontWeight = _mainWindow.SettingInfo.SpotFontInfo.Weight;
                 textIndex.Foreground = new SolidColorBrush(ContrastColor(_mainWindow.SettingInfo.SpotColorList[i]));
-                _mainWindow.SettingInfo.SpotIndexLeftList[i] = _mainWindow.SettingInfo.SpotIndexLeftList[i] == 0d ? 50d + textAreaWidthOffset : _mainWindow.SettingInfo.SpotIndexLeftList[i];
-                _mainWindow.SettingInfo.SpotIndexTopList[i] = _mainWindow.SettingInfo.SpotIndexTopList[i] == 0d ? textAreaHeightOffset : _mainWindow.SettingInfo.SpotIndexTopList[i];
-                textIndex.SetBinding(Canvas.LeftProperty, new Binding($"SpotIndexLeftList[{i}]") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
-                textIndex.SetBinding(Canvas.TopProperty, new Binding($"SpotIndexTopList[{i}]") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
+                textIndex.SetValue(Canvas.LeftProperty, 40d + textAreaWidthOffset);
+                textIndex.SetValue(Canvas.TopProperty, textAreaHeightOffset);
                 textIndex.SetValue(Canvas.ZIndexProperty, 1);
                 dragCanvas.Children.Add(textIndex);
                 this.UpdateLayout();
@@ -152,8 +151,10 @@ namespace IntroducePictureGenerator
                 border.Width = textIndex.ActualHeight * 2;
                 border.Height = textIndex.ActualHeight * 2;
                 border.CornerRadius = new CornerRadius(50);
-                border.SetValue(Canvas.LeftProperty, 40d + textAreaWidthOffset - (border.Width - textIndex.ActualWidth) / 2);
-                border.SetValue(Canvas.TopProperty, textAreaHeightOffset - (border.Height - textIndex.ActualHeight) / 2);
+                _mainWindow.SettingInfo.SpotIndexLeftList[i] = _mainWindow.SettingInfo.SpotIndexLeftList[i] == 0d ? 40d + textAreaWidthOffset - (border.Width - textIndex.ActualWidth) / 2 : _mainWindow.SettingInfo.SpotIndexLeftList[i];
+                _mainWindow.SettingInfo.SpotIndexTopList[i] = _mainWindow.SettingInfo.SpotIndexTopList[i] == 0d ? textAreaHeightOffset - (border.Height - textIndex.ActualHeight) / 2 : _mainWindow.SettingInfo.SpotIndexTopList[i];
+                border.SetBinding(Canvas.LeftProperty, new Binding($"SpotIndexLeftList[{i}]") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
+                border.SetBinding(Canvas.TopProperty, new Binding($"SpotIndexTopList[{i}]") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
                 dragCanvas.Children.Remove(textIndex);
                 border.Child = textIndex;
                 textIndex.HorizontalAlignment = HorizontalAlignment.Center;

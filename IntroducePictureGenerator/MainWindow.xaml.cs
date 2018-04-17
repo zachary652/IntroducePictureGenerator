@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using ColorFont;
 using Microsoft.Win32;
 using Xceed.Wpf.Toolkit;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace IntroducePictureGenerator
 {
@@ -141,7 +142,7 @@ namespace IntroducePictureGenerator
         {
             if (SpotList.Count == 6)
             {
-                System.Windows.MessageBox.Show("我觉得特点太多了，要不您再考虑下？目前只支持最多6个特点", "请考虑", MessageBoxButton.OK, MessageBoxImage.Information);
+                System.Windows.MessageBox.Show("我觉得特点太多了，要不您再考虑下？目前只支持最多6个特点", "特点过多", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             AddSpot();
@@ -276,19 +277,46 @@ namespace IntroducePictureGenerator
 
         private void Button_SaveSetting_Click(object sender, RoutedEventArgs e)
         {
+            SettingInfo.Save();
+        }
 
+        private void Button_RestoreSetting_Click(object sender, RoutedEventArgs e)
+        {
+            SettingInfo = SettingInfo.Load();
+            this.DataContext = SettingInfo;
         }
     }
 
+    [Serializable]
     public class SettingInfo : INotifyPropertyChanged
     {
+        [NonSerialized]
         public FontInfo TitleFontInfo;
 
+        [NonSerialized]
         public FontInfo TitleDetailFontInfo;
 
+        [NonSerialized]
         public FontInfo SpotFontInfo;
 
+        [NonSerialized]
         public FontInfo SpotDetailFontInfo;
+
+        public string TitleFontName { get; set; }
+
+        public string TitleDetailFontName { get; set; }
+
+        public string SpotFontName { get; set; }
+
+        public string SpotDetailFontName { get; set; }
+
+        public string TitleFontWeight { get; set; }
+
+        public string TitleDetailFontWeight { get; set; }
+
+        public string SpotFontWeight { get; set; }
+
+        public string SpotDetailFontWeight { get; set; }
 
         private double _titleSize;
 
@@ -350,6 +378,7 @@ namespace IntroducePictureGenerator
             }
         }
 
+        [field: NonSerializedAttribute()]
         private ObservableCollection<Color> _spotColorList;
 
         public ObservableCollection<Color> SpotColorList
@@ -362,27 +391,40 @@ namespace IntroducePictureGenerator
             }
         }
 
-        private ObservableCollection<double> _titleLeftList;
+        private List<string> _spotColorStringList;
 
-        public ObservableCollection<double> TitleLeftList
+        public List<string> SpotColorStringList
         {
-            get { return _titleLeftList; }
+            get { return _spotColorStringList; }
             set
             {
-                _titleLeftList = value;
-                OnPropertyChanged("TitleLeftList");
+                _spotColorStringList = value;
+                OnPropertyChanged("SpotColorStringList");
             }
         }
 
-        private ObservableCollection<double> _titleDetailLeftList;
 
-        public ObservableCollection<double> TitleDetailLeftList
+        private double _titleLeft;
+
+        public double TitleLeft
         {
-            get { return _titleDetailLeftList; }
+            get { return _titleLeft; }
             set
             {
-                _titleDetailLeftList = value;
-                OnPropertyChanged("TitleDetailLeftList");
+                _titleLeft = value;
+                OnPropertyChanged("TitleLeft");
+            }
+        }
+
+        private double _titleDetailLeft;
+
+        public double TitleDetailLeft
+        {
+            get { return _titleDetailLeft; }
+            set
+            {
+                _titleDetailLeft = value;
+                OnPropertyChanged("TitleDetailLeft");
             }
         }
 
@@ -422,27 +464,27 @@ namespace IntroducePictureGenerator
             }
         }
 
-        private ObservableCollection<double> _titleTopList;
+        private double _titleTop;
 
-        public ObservableCollection<double> TitleTopList
+        public double TitleTop
         {
-            get { return _titleTopList; }
+            get { return _titleTop; }
             set
             {
-                _titleTopList = value;
-                OnPropertyChanged("TitleTopList");
+                _titleTop = value;
+                OnPropertyChanged("TitleTop");
             }
         }
 
-        private ObservableCollection<double> _titleDetailTopList;
+        private double _titleDetailTop;
 
-        public ObservableCollection<double> TitleDetailTopList
+        public double TitleDetailTop
         {
-            get { return _titleDetailTopList; }
+            get { return _titleDetailTop; }
             set
             {
-                _titleDetailTopList = value;
-                OnPropertyChanged("TitleDetailTopList");
+                _titleDetailTop = value;
+                OnPropertyChanged("TitleDetailTop");
             }
         }
 
@@ -482,6 +524,7 @@ namespace IntroducePictureGenerator
             }
         }
 
+        [field: NonSerializedAttribute()]
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
@@ -494,6 +537,10 @@ namespace IntroducePictureGenerator
 
         public SettingInfo()
         {
+            TitleFontInfo = new FontInfo();
+            TitleDetailFontInfo = new FontInfo();
+            SpotFontInfo = new FontInfo();
+            SpotDetailFontInfo = new FontInfo();
             SpotColorList = new ObservableCollection<Color>();
             SpotColorList.Add(Colors.White);
             SpotColorList.Add(Colors.White);
@@ -501,10 +548,17 @@ namespace IntroducePictureGenerator
             SpotColorList.Add(Colors.White);
             SpotColorList.Add(Colors.White);
             SpotColorList.Add(Colors.White);
-            TitleLeftList = new ObservableCollection<double>();
-            TitleTopList = new ObservableCollection<double>();
-            TitleDetailLeftList = new ObservableCollection<double>();
-            TitleDetailTopList = new ObservableCollection<double>();
+            SpotColorStringList = new List<string>();
+            SpotColorStringList.Add(string.Empty);
+            SpotColorStringList.Add(string.Empty);
+            SpotColorStringList.Add(string.Empty);
+            SpotColorStringList.Add(string.Empty);
+            SpotColorStringList.Add(string.Empty);
+            SpotColorStringList.Add(string.Empty);
+            TitleLeft = 0d;
+            TitleTop = 0d;
+            TitleDetailLeft = 0d;
+            TitleDetailTop = 0d;
             SpotLeftList = new ObservableCollection<double>();
             SpotTopList = new ObservableCollection<double>();
             SpotDetailLeftList = new ObservableCollection<double>();
@@ -513,16 +567,66 @@ namespace IntroducePictureGenerator
             SpotIndexTopList = new ObservableCollection<double>();
             for (int i = 0; i < 6; i++)
             {
-                TitleLeftList.Add(0d);
-                TitleTopList.Add(0d);
-                TitleDetailLeftList.Add(0d);
-                TitleDetailTopList.Add(0d);
                 SpotLeftList.Add(0d);
                 SpotTopList.Add(0d);
                 SpotDetailLeftList.Add(0d);
                 SpotDetailTopList.Add(0d);
                 SpotIndexLeftList.Add(0d);
                 SpotIndexTopList.Add(0d);
+            }
+        }
+
+        public void Save()
+        {
+            TitleFontName = TitleFontInfo.Family.Source;
+            TitleDetailFontName = TitleDetailFontInfo.Family.Source;
+            SpotFontName = SpotFontInfo.Family.Source;
+            SpotDetailFontName = SpotDetailFontInfo.Family.Source;
+            TitleFontWeight = TitleFontInfo.Weight.ToString();
+            TitleDetailFontWeight = TitleDetailFontInfo.Weight.ToString();
+            SpotFontWeight = SpotFontInfo.Weight.ToString();
+            SpotDetailFontWeight = SpotDetailFontInfo.Weight.ToString();
+            for (int i = 0; i < SpotColorList.Count; i++)
+            {
+                SpotColorStringList[i] = SpotColorList[i].ToString();
+            }
+            using (FileStream fs = new FileStream(@".\setting.obj", FileMode.Create))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fs, this);
+            }
+        }
+
+        public SettingInfo Load()
+        {
+            using (FileStream fs = new FileStream(@".\setting.obj", FileMode.Open))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                SettingInfo newSettingInfo = formatter.Deserialize(fs) as SettingInfo;
+                newSettingInfo.TitleFontInfo = new FontInfo();
+                newSettingInfo.TitleDetailFontInfo = new FontInfo();
+                newSettingInfo.SpotFontInfo = new FontInfo();
+                newSettingInfo.SpotDetailFontInfo = new FontInfo();
+                newSettingInfo.TitleFontInfo.Family = new FontFamily(newSettingInfo.TitleFontName);
+                newSettingInfo.TitleDetailFontInfo.Family = new FontFamily(newSettingInfo.TitleDetailFontName);
+                newSettingInfo.SpotFontInfo.Family = new FontFamily(newSettingInfo.SpotFontName);
+                newSettingInfo.SpotDetailFontInfo.Family = new FontFamily(newSettingInfo.SpotDetailFontName);
+                newSettingInfo.TitleFontInfo.Weight = (FontWeight)(new FontWeightConverter()).ConvertFromString(newSettingInfo.TitleFontWeight);
+                newSettingInfo.TitleDetailFontInfo.Weight = (FontWeight)(new FontWeightConverter()).ConvertFromString(newSettingInfo.TitleDetailFontWeight);
+                newSettingInfo.SpotFontInfo.Weight = (FontWeight)(new FontWeightConverter()).ConvertFromString(newSettingInfo.SpotFontWeight);
+                newSettingInfo.SpotDetailFontInfo.Weight = (FontWeight)(new FontWeightConverter()).ConvertFromString(newSettingInfo.SpotDetailFontWeight);
+                newSettingInfo.SpotColorList = new ObservableCollection<Color>();
+                newSettingInfo.SpotColorList.Add(Colors.White);
+                newSettingInfo.SpotColorList.Add(Colors.White);
+                newSettingInfo.SpotColorList.Add(Colors.White);
+                newSettingInfo.SpotColorList.Add(Colors.White);
+                newSettingInfo.SpotColorList.Add(Colors.White);
+                newSettingInfo.SpotColorList.Add(Colors.White);
+                for (int i = 0; i < newSettingInfo.SpotColorStringList.Count; i++)
+                {
+                    newSettingInfo.SpotColorList[i] = (Color)ColorConverter.ConvertFromString(newSettingInfo.SpotColorStringList[i]);
+                }
+                return newSettingInfo;
             }
         }
     }

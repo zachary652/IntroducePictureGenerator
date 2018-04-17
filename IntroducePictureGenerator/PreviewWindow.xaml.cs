@@ -104,28 +104,32 @@ namespace IntroducePictureGenerator
                 dragCanvas.Children.Add(image);
             }
             double textAreaWidthOffset = _width * _mainWindow.SettingInfo.ImageAreaRatio;
-            double textAreaHeightOffset = 100d;
+            double textAreaHeightOffset = 80d;
             TextBlock textBlockTitle = new TextBlock();
             textBlockTitle.Text = _mainWindow.TextBox_Title.Text;
             textBlockTitle.FontFamily = _mainWindow.SettingInfo.TitleFontInfo.Family;
             textBlockTitle.FontSize = _mainWindow.SettingInfo.TitleSize;
             textBlockTitle.FontWeight = _mainWindow.SettingInfo.TitleFontInfo.Weight;
-            textBlockTitle.SetValue(Canvas.LeftProperty, 50d + textAreaWidthOffset);
-            textBlockTitle.SetValue(Canvas.TopProperty, textAreaHeightOffset);
+            _mainWindow.SettingInfo.TitleLeft = _mainWindow.SettingInfo.TitleLeft == 0d ? 50d + textAreaWidthOffset : _mainWindow.SettingInfo.TitleLeft;
+            _mainWindow.SettingInfo.TitleTop = _mainWindow.SettingInfo.TitleTop == 0d ? textAreaHeightOffset : _mainWindow.SettingInfo.TitleTop;
+            textBlockTitle.SetBinding(Canvas.LeftProperty, new Binding("TitleLeft") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
+            textBlockTitle.SetBinding(Canvas.TopProperty, new Binding("TitleTop") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
             dragCanvas.Children.Add(textBlockTitle);
             this.UpdateLayout();
-            textAreaHeightOffset += textBlockTitle.ActualHeight + 10;
+            textAreaHeightOffset += textBlockTitle.ActualHeight + 20;
 
             TextBlock textBlockTitleDetail = new TextBlock();
             textBlockTitleDetail.Text = _mainWindow.TextBox_TitleDetail.Text;
             textBlockTitleDetail.FontFamily = _mainWindow.SettingInfo.TitleDetailFontInfo.Family;
             textBlockTitleDetail.FontSize = _mainWindow.SettingInfo.TitleDetailSize;
             textBlockTitleDetail.FontWeight = _mainWindow.SettingInfo.TitleDetailFontInfo.Weight;
-            textBlockTitleDetail.SetValue(Canvas.LeftProperty, 50d + textAreaWidthOffset);
-            textBlockTitleDetail.SetValue(Canvas.TopProperty, textAreaHeightOffset);
+            _mainWindow.SettingInfo.TitleDetailLeft = _mainWindow.SettingInfo.TitleDetailLeft == 0d ? 50d + textAreaWidthOffset : _mainWindow.SettingInfo.TitleDetailLeft;
+            _mainWindow.SettingInfo.TitleDetailTop = _mainWindow.SettingInfo.TitleDetailTop == 0d ? textAreaHeightOffset : _mainWindow.SettingInfo.TitleDetailTop;
+            textBlockTitleDetail.SetBinding(Canvas.LeftProperty, new Binding("TitleDetailLeft") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
+            textBlockTitleDetail.SetBinding(Canvas.TopProperty, new Binding("TitleDetailTop") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
             dragCanvas.Children.Add(textBlockTitleDetail);
             this.UpdateLayout();
-            textAreaHeightOffset += textBlockTitleDetail.ActualHeight + 25;
+            textAreaHeightOffset += textBlockTitleDetail.ActualHeight + 30;
 
             for (int i = 0; i < _mainWindow.SpotList.Count; i++)
             {
@@ -135,8 +139,10 @@ namespace IntroducePictureGenerator
                 textIndex.FontSize = _mainWindow.SettingInfo.SpotSize;
                 textIndex.FontWeight = _mainWindow.SettingInfo.SpotFontInfo.Weight;
                 textIndex.Foreground = new SolidColorBrush(ContrastColor(_mainWindow.SettingInfo.SpotColorList[i]));
-                textIndex.SetValue(Canvas.LeftProperty, 40d + textAreaWidthOffset);
-                textIndex.SetValue(Canvas.TopProperty, textAreaHeightOffset);
+                _mainWindow.SettingInfo.SpotIndexLeftList[i] = _mainWindow.SettingInfo.SpotIndexLeftList[i] == 0d ? 50d + textAreaWidthOffset : _mainWindow.SettingInfo.SpotIndexLeftList[i];
+                _mainWindow.SettingInfo.SpotIndexTopList[i] = _mainWindow.SettingInfo.SpotIndexTopList[i] == 0d ? textAreaHeightOffset : _mainWindow.SettingInfo.SpotIndexTopList[i];
+                textIndex.SetBinding(Canvas.LeftProperty, new Binding($"SpotIndexLeftList[{i}]") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
+                textIndex.SetBinding(Canvas.TopProperty, new Binding($"SpotIndexTopList[{i}]") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
                 textIndex.SetValue(Canvas.ZIndexProperty, 1);
                 dragCanvas.Children.Add(textIndex);
                 this.UpdateLayout();
@@ -160,8 +166,10 @@ namespace IntroducePictureGenerator
                 textSpot.FontFamily = _mainWindow.SettingInfo.SpotFontInfo.Family;
                 textSpot.FontSize = _mainWindow.SettingInfo.SpotSize;
                 textSpot.FontWeight = _mainWindow.SettingInfo.SpotFontInfo.Weight;
-                textSpot.SetValue(Canvas.LeftProperty, 40d + textAreaWidthOffset + textIndex.ActualWidth + 30);
-                textSpot.SetValue(Canvas.TopProperty, textAreaHeightOffset);
+                _mainWindow.SettingInfo.SpotLeftList[i] = _mainWindow.SettingInfo.SpotLeftList[i] == 0d ? 40d + textAreaWidthOffset + textIndex.ActualWidth + 30 : _mainWindow.SettingInfo.SpotLeftList[i];
+                _mainWindow.SettingInfo.SpotTopList[i] = _mainWindow.SettingInfo.SpotTopList[i] == 0d ? textAreaHeightOffset : _mainWindow.SettingInfo.SpotTopList[i];
+                textSpot.SetBinding(Canvas.LeftProperty, new Binding($"SpotLeftList[{i}]") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
+                textSpot.SetBinding(Canvas.TopProperty, new Binding($"SpotTopList[{i}]") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
                 dragCanvas.Children.Add(textSpot);
                 this.UpdateLayout();
 
@@ -172,8 +180,10 @@ namespace IntroducePictureGenerator
                 textSpotDetail.FontFamily = _mainWindow.SettingInfo.SpotDetailFontInfo.Family;
                 textSpotDetail.FontSize = _mainWindow.SettingInfo.SpotDetailSize;
                 textSpotDetail.FontWeight = _mainWindow.SettingInfo.SpotDetailFontInfo.Weight;
-                textSpotDetail.SetValue(Canvas.LeftProperty, 40d + textAreaWidthOffset + textIndex.ActualWidth + 30);
-                textSpotDetail.SetValue(Canvas.TopProperty, textAreaHeightOffset);
+                _mainWindow.SettingInfo.SpotDetailLeftList[i] = _mainWindow.SettingInfo.SpotDetailLeftList[i] == 0d ? 40d + textAreaWidthOffset + textIndex.ActualWidth + 30 : _mainWindow.SettingInfo.SpotDetailLeftList[i];
+                _mainWindow.SettingInfo.SpotDetailTopList[i] = _mainWindow.SettingInfo.SpotDetailTopList[i] == 0d ? textAreaHeightOffset : _mainWindow.SettingInfo.SpotDetailTopList[i];
+                textSpotDetail.SetBinding(Canvas.LeftProperty, new Binding($"SpotDetailLeftList[{i}]") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
+                textSpotDetail.SetBinding(Canvas.TopProperty, new Binding($"SpotDetailTopList[{i}]") { Source = _mainWindow.SettingInfo, Mode = BindingMode.TwoWay });
                 dragCanvas.Children.Add(textSpotDetail);
                 this.UpdateLayout();
 
